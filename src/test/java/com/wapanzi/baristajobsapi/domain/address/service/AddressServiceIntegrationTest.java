@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 import static org.assertj.core.api.BDDAssertions.then;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = NONE)
 public class AddressServiceIntegrationTest {
     @Autowired
     private AddressRepository addressRepository;
