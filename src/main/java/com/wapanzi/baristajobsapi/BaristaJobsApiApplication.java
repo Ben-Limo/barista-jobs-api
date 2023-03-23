@@ -1,4 +1,4 @@
-package com.teckmils.baristajobsapi;
+package com.wapanzi.baristajobsapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
