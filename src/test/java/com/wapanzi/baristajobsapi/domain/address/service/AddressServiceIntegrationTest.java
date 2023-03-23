@@ -2,6 +2,7 @@ package com.wapanzi.baristajobsapi.domain.address.service;
 
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest(webEnvironment = NONE)
+@Transactional
 public class AddressServiceIntegrationTest {
     @Autowired
     private AddressRepository addressRepository;
