@@ -68,4 +68,28 @@ class AddressControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void testCreateAddress_returnNewAddress() throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // given
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", 1l);
+        body.put("city", "Nai");
+        body.put("country", "Kenya");
+        body.put("postalCode", "2442");
+        body.put("street", "Koinange st");
+
+        given(addressServiceImpl.createAddress(any(Address.class))).willReturn(
+                new Address(1l, "Nai", "Kenya", "2442", "Koinange st")
+        );
+
+        // when // then
+        mockMvc.perform(post("/addresses")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }

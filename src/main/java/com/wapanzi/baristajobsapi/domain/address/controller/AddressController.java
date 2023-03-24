@@ -20,6 +20,11 @@ public class AddressController {
     @PostMapping("/addresses/{id}")
     public Address updateAddress(@PathVariable Long id,
                                  @Valid @RequestBody Address address) {
+        return addressServiceImpl.updateAddressDetails(id, address);
+    }
+
+    @PostMapping("/addresses")
+    public Address createAddress(@Valid @RequestBody Address address) {
         return addressServiceImpl.createAddress(address);
     }
 }
