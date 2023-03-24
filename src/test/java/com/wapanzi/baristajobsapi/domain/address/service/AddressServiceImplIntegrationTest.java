@@ -3,10 +3,12 @@ package com.wapanzi.baristajobsapi.domain.address.service;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
 import jakarta.transaction.Transactional;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -35,6 +37,18 @@ public class AddressServiceImplIntegrationTest {
     }
 
     @Test
+    void testGetAddressById_returnNotFoundException() {
+        // given
+        Long id = 23l;
+
+        // when
+        Throwable throwable = catchThrowable(() -> addressServiceImpl.getAddressById(id));
+
+        // then
+        BDDAssertions.then(throwable).isInstanceOf(AddressNotFoundException.class);
+    }
+
+    @Test
     void testUpdateAddressDetails_returnUpdatedAddress() {
         //given
         Address savedAddress = addressRepository.save(
@@ -53,6 +67,19 @@ public class AddressServiceImplIntegrationTest {
         then(updatedAddress.getCountry()).isEqualTo("Kenya");
         then(updatedAddress.getPostalCode()).isEqualTo("Banda st");
         then(updatedAddress.getStreet()).isEqualTo("2323");
+    }
+
+    @Test
+    void testUpdateAddressDetails_returnNotFoundException() {
+        // given
+        Long id = 23l;
+        Address updateAddress = new Address(23l, "Nai", "Kenya", "Kaunda St", "1212");
+
+        // when
+        Throwable throwable = catchThrowable(() -> addressServiceImpl.updateAddressDetails(id, updateAddress));
+
+        // then
+        BDDAssertions.then(throwable).isInstanceOf(AddressNotFoundException.class);
     }
 
     @Test

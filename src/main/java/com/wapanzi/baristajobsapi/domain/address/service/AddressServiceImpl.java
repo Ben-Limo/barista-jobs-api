@@ -15,12 +15,16 @@ public class AddressServiceImpl implements AddressService {
     private AddressRepository addressRepository;
     @Cacheable("addresses")
     public Address getAddressById(Long id) {
-        return addressRepository.findById(id).orElse(null);
+        return addressRepository.findById(id).orElseThrow(
+                () -> new AddressNotFoundException()
+        );
     }
 
     @Override
     public Address updateAddressDetails(long id, Address address) {
-        Address savedAddress = addressRepository.findById(id).get();
+        Address savedAddress = addressRepository.findById(id).orElseThrow(
+                () -> new AddressNotFoundException()
+        );
         savedAddress.setCity(address.getCity());
         savedAddress.setCountry(address.getCountry());
         savedAddress.setStreet(address.getStreet());
