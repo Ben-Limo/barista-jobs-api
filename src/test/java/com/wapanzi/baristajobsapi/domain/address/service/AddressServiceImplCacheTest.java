@@ -15,9 +15,9 @@ import static org.mockito.Mockito.times;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringBootTest(webEnvironment = NONE)
-public class AddressServiceCacheTest {
+public class AddressServiceImplCacheTest {
     @Autowired
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
 
     @MockBean
     private AddressRepository addressRepository;
@@ -30,9 +30,9 @@ public class AddressServiceCacheTest {
         given(addressRepository.findById(id)).willReturn(Optional.of(address));
 
         // when
-        addressService.getAddressById(id);
-        addressService.getAddressById(id);
-        addressService.getAddressById(id);
+        addressServiceImpl.getAddressById(id);
+        addressServiceImpl.getAddressById(id);
+        addressServiceImpl.getAddressById(id);
 
         // then
         then(addressRepository).should(times(1)).findById(id);

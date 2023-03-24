@@ -4,22 +4,20 @@ import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.mockito.Mockito.times;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest(webEnvironment = NONE)
 @Transactional
-public class AddressServiceIntegrationTest {
+public class AddressServiceImplIntegrationTest {
     @Autowired
     private AddressRepository addressRepository;
 
     @Autowired
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
 
     @Test
     void testGetAddressById_returnAddressDetails() {
@@ -29,7 +27,7 @@ public class AddressServiceIntegrationTest {
         );
 
         // when
-        Address fetchedAddress = addressService.getAddressById(savedAddress.getId());
+        Address fetchedAddress = addressServiceImpl.getAddressById(savedAddress.getId());
 
         // then
         then(fetchedAddress.getId()).isNotNull();
@@ -44,7 +42,7 @@ public class AddressServiceIntegrationTest {
         );
 
         // when
-        Address updatedAddress = addressService.updateAddressDetails(10001l,
+        Address updatedAddress = addressServiceImpl.updateAddressDetails(10001l,
                 new Address(10001l, "Nairobi", "Kenya", "Banda st", "2323")
         );
 
@@ -63,7 +61,7 @@ public class AddressServiceIntegrationTest {
         Address newAddress = new Address(null, "Kanairo", "Kenya", "Banda st", "2323");
 
         // when
-        Address savedAddress = addressService.createAddress(newAddress);
+        Address savedAddress = addressServiceImpl.createAddress(newAddress);
 
         // then
         then(savedAddress.getId()).isNotNull();

@@ -2,12 +2,9 @@ package com.wapanzi.baristajobsapi.domain.address.service;
 
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -16,9 +13,9 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringBootTest(webEnvironment = NONE)
-public class AddressServiceUnitTest {
+public class AddressServiceImplUnitTest {
     @Autowired
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
 
     @MockBean
     private AddressRepository addressRepository;
@@ -29,7 +26,7 @@ public class AddressServiceUnitTest {
         addressRepository.save(newAddress);
 
         // when
-        addressService.removeAddress(newAddress.getId());
+        addressServiceImpl.removeAddress(newAddress.getId());
 
         // then
         BDDMockito.then(addressRepository).should(times(1)).deleteById(newAddress.getId());
@@ -42,7 +39,7 @@ public class AddressServiceUnitTest {
         given(addressRepository.save(any(Address.class))).willReturn(newAddress);
 
         // when
-        Address savedAddress = addressService.createAddress(newAddress);
+        Address savedAddress = addressServiceImpl.createAddress(newAddress);
 
         // then
         then(savedAddress.getId()).isNotNull();

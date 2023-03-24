@@ -1,14 +1,13 @@
 package com.wapanzi.baristajobsapi.domain.address.controller;
 
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
-import com.wapanzi.baristajobsapi.domain.address.service.AddressService;
+import com.wapanzi.baristajobsapi.domain.address.service.AddressServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,11 +20,11 @@ class AddressControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private AddressService addressService;
+    private AddressServiceImpl addressServiceImpl;
     @Test
     void testGetAddress_returnSavedAddress() throws Exception{
         // given
-        given(addressService.getAddressById(anyLong())).willReturn(
+        given(addressServiceImpl.getAddressById(anyLong())).willReturn(
                 new Address(1L, "Nairobi", "Kenya", "1212", "Kaunda st")
 
         );
