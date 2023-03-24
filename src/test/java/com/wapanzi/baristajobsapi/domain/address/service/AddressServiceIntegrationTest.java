@@ -37,6 +37,27 @@ public class AddressServiceIntegrationTest {
     }
 
     @Test
+    void testUpdateAddressDetails_returnUpdatedAddress() {
+        //given
+        Address savedAddress = addressRepository.save(
+                new Address(10001l, "Nai", "Kenya", "Kaunda St", "1212")
+        );
+
+        // when
+        Address updatedAddress = addressService.updateAddressDetails(10001l,
+                new Address(10001l, "Nairobi", "Kenya", "Banda st", "2323")
+        );
+
+        // then
+        then(updatedAddress.getId()).isNotNull();
+        then(updatedAddress.getId()).isEqualTo(savedAddress.getId());
+        then(updatedAddress.getCity()).isEqualTo("Nairobi");
+        then(updatedAddress.getCountry()).isEqualTo("Kenya");
+        then(updatedAddress.getPostalCode()).isEqualTo("Banda st");
+        then(updatedAddress.getStreet()).isEqualTo("2323");
+    }
+
+    @Test
     void testCreateAddress_returnNewAddress() {
         // given
         Address newAddress = new Address(null, "Kanairo", "Kenya", "Banda st", "2323");
