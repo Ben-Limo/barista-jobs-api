@@ -17,4 +17,22 @@ public class AddressService {
     public Address getAddressById(Long id) {
         return addressRepository.findById(id).orElse(null);
     }
+
+    public Address updateAddressDetails(long id, Address address) {
+        Address savedAddress = addressRepository.findById(id).get();
+        savedAddress.setCity(address.getCity());
+        savedAddress.setCountry(address.getCountry());
+        savedAddress.setStreet(address.getStreet());
+        savedAddress.setPostalCode(address.getPostalCode());
+
+        return addressRepository.save(savedAddress);
+    }
+
+    public Address createAddress(Address address) {
+        return addressRepository.save(address);
+    }
+
+    public void removeAddress(long id) {
+        addressRepository.deleteById(id);
+    }
 }
