@@ -5,6 +5,8 @@ import com.wapanzi.baristajobsapi.domain.address.service.AddressServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,5 +28,12 @@ public class AddressController {
     @PostMapping("/addresses")
     public Address createAddress(@Valid @RequestBody Address address) {
         return addressServiceImpl.createAddress(address);
+    }
+
+    @DeleteMapping("/addresses/{addressId}")
+    public ResponseEntity<String> removeAddress(@PathVariable Long addressId) {
+        addressServiceImpl.removeAddress(addressId);
+
+        return new ResponseEntity<String>("Address deleted successfully", HttpStatus.OK);
     }
 }
