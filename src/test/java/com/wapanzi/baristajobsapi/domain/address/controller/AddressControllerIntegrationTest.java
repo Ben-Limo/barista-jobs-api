@@ -63,12 +63,20 @@ class AddressControllerIntegrationTest {
                 new Address(1l, "Nai", "Kenya", "2442", "Koinange st")
         );
 
-        // when // then
-        mockMvc.perform(post("/addresses/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        // when
+        ResultActions response = mockMvc.perform(post("/addresses/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        response
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1l))
+                .andExpect(jsonPath("city").value("Nai"))
+                .andExpect(jsonPath("country").value("Kenya"))
+                .andExpect(jsonPath("postalCode").value("2442"))
+                .andExpect(jsonPath("street").value("Koinange st"));
     }
 
     @Test
