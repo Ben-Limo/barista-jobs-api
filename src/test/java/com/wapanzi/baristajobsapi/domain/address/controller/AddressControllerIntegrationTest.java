@@ -2,6 +2,7 @@ package com.wapanzi.baristajobsapi.domain.address.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
+import com.wapanzi.baristajobsapi.domain.address.service.AddressNotFoundException;
 import com.wapanzi.baristajobsapi.domain.address.service.AddressServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,17 @@ class AddressControllerIntegrationTest {
                 .andExpect(jsonPath("street").value("Kaunda st"));
     }
 
+    @Test
+    void testGetAddress_forMissingAddress_returnStatus404() throws Exception{
+        // given
+        given(addressServiceImpl.getAddressById(anyLong())).willThrow(AddressNotFoundException.class);
+
+        // when
+        ResultActions response = mockMvc.perform(get("/addresses/1"));
+
+        // then
+        response.andExpect(status().isNotFound());
+    }
     @Test
     void testUpdateAddress_returnUpdatedAddress() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
