@@ -5,6 +5,7 @@ import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,5 +35,11 @@ public class CompanyTypeServiceImpl implements  CompanyTypeService {
         savedCompanyType.setUpdatedAt(LocalDateTime.now());
 
         return repository.save(savedCompanyType);
+    }
+
+    @Override
+    public void removeCompanyType(Long id) {
+        repository.deleteById(id);
+
     }
 }

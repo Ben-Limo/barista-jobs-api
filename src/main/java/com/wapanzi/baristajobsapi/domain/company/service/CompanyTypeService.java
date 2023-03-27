@@ -7,4 +7,7 @@ public interface CompanyTypeService {
 
     CompanyType findCompanyTypeById(Long id);
     CompanyType updateCompanyType(Long id, CompanyType newUpdate);
+
+    void removeCompanyType(Long id);
+
 }
