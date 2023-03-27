@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -22,7 +24,9 @@ public class AddressServiceImplUnitTest {
     @Test
     void testRemoveAddress_happyPath() {
         // given
-        Address newAddress = new Address(1l, "Kanairo", "Kenya", "Banda st", "2323");
+        Address newAddress = new Address(1l, "Kanairo", "Kenya", "Banda st", "2323" ,
+                LocalDateTime.now(),
+                LocalDateTime.now());
         addressRepository.save(newAddress);
 
         // when
@@ -35,7 +39,9 @@ public class AddressServiceImplUnitTest {
     @Test
     void testCreateAddress_returnSavedAddress() {
         // given
-        Address newAddress = new Address(1l, "Kanairo", "Kenya", "Banda st", "2323");
+        Address newAddress = new Address(1l, "Kanairo", "Kenya", "Banda st", "2323" ,
+                LocalDateTime.now(),
+                LocalDateTime.now());
         given(addressRepository.save(any(Address.class))).willReturn(newAddress);
 
         // when

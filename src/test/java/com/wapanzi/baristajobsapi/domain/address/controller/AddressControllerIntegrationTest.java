@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,9 @@ class AddressControllerIntegrationTest {
     void testGetAddress_returnSavedAddress() throws Exception{
         // given
         given(addressServiceImpl.getAddressById(anyLong())).willReturn(
-                new Address(1L, "Nairobi", "Kenya", "1212", "Kaunda st")
+                new Address(1L, "Nairobi", "Kenya", "1212", "Kaunda st" ,
+                        LocalDateTime.now(),
+                        LocalDateTime.now())
 
         );
 
@@ -72,7 +75,9 @@ class AddressControllerIntegrationTest {
         body.put("street", "Koinange st");
 
         given(addressServiceImpl.updateAddressDetails(anyLong(), any(Address.class))).willReturn(
-                new Address(1l, "Nai", "Kenya", "2442", "Koinange st")
+                new Address(1l, "Nai", "Kenya", "2442", "Koinange st" ,
+                        LocalDateTime.now(),
+                        LocalDateTime.now())
         );
 
         // when
@@ -104,7 +109,9 @@ class AddressControllerIntegrationTest {
         body.put("street", "Koinange st");
 
         given(addressServiceImpl.createAddress(any(Address.class))).willReturn(
-                new Address(1l, "Nai", "Kenya", "2442", "Koinange st")
+                new Address(1l, "Nai", "Kenya", "2442", "Koinange st" ,
+                        LocalDateTime.now(),
+                        LocalDateTime.now())
         );
 
         // when

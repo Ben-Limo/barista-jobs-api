@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -25,7 +27,9 @@ public class AddressServiceImplIntegrationTest {
     void testGetAddressById_returnAddressDetails() {
         // given
         Address savedAddress = addressRepository.save(
-                new Address(null, "Nai", "Kenya", "Kaunda St", "1212")
+                new Address(null, "Nai", "Kenya", "Kaunda St", "1212" ,
+                        LocalDateTime.now(),
+                        LocalDateTime.now())
         );
 
         // when
@@ -52,12 +56,16 @@ public class AddressServiceImplIntegrationTest {
     void testUpdateAddressDetails_returnUpdatedAddress() {
         //given
         Address savedAddress = addressRepository.save(
-                new Address(10001l, "Nai", "Kenya", "Kaunda St", "1212")
+                new Address(10001l, "Nai", "Kenya", "Kaunda St", "1212" ,
+                        LocalDateTime.now(),
+                        LocalDateTime.now())
         );
 
         // when
         Address updatedAddress = addressServiceImpl.updateAddressDetails(10001l,
-                new Address(10001l, "Nairobi", "Kenya", "Banda st", "2323")
+                new Address(10001l, "Nairobi", "Kenya", "Banda st", "2323",
+                        LocalDateTime.now(),
+                        LocalDateTime.now())
         );
 
         // then
@@ -73,7 +81,9 @@ public class AddressServiceImplIntegrationTest {
     void testUpdateAddressDetails_returnNotFoundException() {
         // given
         Long id = 23l;
-        Address updateAddress = new Address(23l, "Nai", "Kenya", "Kaunda St", "1212");
+        Address updateAddress = new Address(23l, "Nai", "Kenya", "Kaunda St", "1212",
+                LocalDateTime.now(),
+                LocalDateTime.now());
 
         // when
         Throwable throwable = catchThrowable(() -> addressServiceImpl.updateAddressDetails(id, updateAddress));
@@ -85,7 +95,14 @@ public class AddressServiceImplIntegrationTest {
     @Test
     void testCreateAddress_returnNewAddress() {
         // given
-        Address newAddress = new Address(null, "Kanairo", "Kenya", "Banda st", "2323");
+        Address newAddress = new Address(
+                null, "Kanairo",
+                "Kenya",
+                "Banda st",
+                "2323",
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
 
         // when
         Address savedAddress = addressServiceImpl.createAddress(newAddress);

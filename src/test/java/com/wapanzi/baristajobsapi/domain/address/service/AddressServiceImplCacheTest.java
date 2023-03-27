@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -26,7 +27,9 @@ public class AddressServiceImplCacheTest {
     void testGetAddressById_forMultipleRequest_returnFromCache() {
         // given
         Long id = 12L;
-        Address address = new Address(null, "Nai", "Kenya", "Kaunda St", "1212");
+        Address address = new Address(null, "Nai", "Kenya", "Kaunda St", "1212" ,
+                LocalDateTime.now(),
+                LocalDateTime.now());
         given(addressRepository.findById(id)).willReturn(Optional.of(address));
 
         // when
