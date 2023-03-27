@@ -3,6 +3,7 @@ package com.wapanzi.baristajobsapi.domain.company.service;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,18 +17,41 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = NONE)
 public class CompanyTypeServiceImplIntegrationTest {
     @Autowired
-    private CompanyTypeServiceImpl companyTypeServiceImpl;
+    private CompanyTypeServiceImpl service;
 
+    @Autowired
+    private CompanyTypeRepository repository;
+
+    private CompanyType companyType;
+    @BeforeEach
+    void setup() {
+        companyType = new CompanyType(null, "Barista", LocalDateTime.now(), LocalDateTime.now());
+    }
     @Test
     void testCreateCompanyType_returnCreatedCompanyType() {
         // given
-        CompanyType companyType = new CompanyType(null, "Barista", LocalDateTime.now(), LocalDateTime.now());
 
         // when
-        CompanyType savedCompanyType = companyTypeServiceImpl.createNewCompanyType(companyType);
+        CompanyType savedCompanyType = service.createNewCompanyType(companyType);
 
         // then
         then(savedCompanyType.getId()).isNotNull();
         then(savedCompanyType.getCompanyType()).isEqualTo("Barista");
+    }
+
+    @Test
+    void testUpdateCompanyType_happyPath_returnUpdatedDetails() {
+        // given
+        Long id = 1l;
+        CompanyType savedCompanyType = repository.save(companyType);
+
+        // when
+        CompanyType updatedCompanyType = service.updateCompanyType(id,
+                new CompanyType(1l, "Brewery", LocalDateTime.now(), LocalDateTime.now())
+        );
+
+        // then
+        then(updatedCompanyType.getId()).isEqualTo(1l);
+        then(updatedCompanyType.getCompanyType()).isEqualTo("Brewery");
     }
 }

@@ -75,4 +75,21 @@ public class CompanyTypeServiceImplUnitTest {
         // then
         BDDAssertions.then(throwable).isInstanceOf(CompanyTypeNotFoundException.class);
     }
+
+    @Test
+    void testUpdateCompanyType_happyPath_returnUpdatedDetails() {
+       // given
+        Long id  = 1l;
+        CompanyType newUpdate = new CompanyType(1l, "Brewery", LocalDateTime.now(), LocalDateTime.now());
+        given(repository.findById(anyLong())).willReturn(Optional.of(companyType));
+        given(repository.save(any(CompanyType.class))).willReturn(newUpdate);
+       // when
+        CompanyType updatedCompanyType = service.updateCompanyType(id, newUpdate);
+
+        // then
+        then(updatedCompanyType.getId()).isNotNull();
+        then(updatedCompanyType.getId()).isEqualTo(companyType.getId());
+        then(updatedCompanyType.getCompanyType()).isEqualTo(newUpdate.getCompanyType());
+    }
+
 }

@@ -6,4 +6,5 @@ public interface CompanyTypeService {
     CompanyType createNewCompanyType(CompanyType companyType);
 
     CompanyType findCompanyTypeById(Long id);
+    CompanyType updateCompanyType(Long id, CompanyType newUpdate);
 }
