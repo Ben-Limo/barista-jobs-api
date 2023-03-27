@@ -29,6 +29,7 @@ public class AddressServiceImpl implements AddressService {
         savedAddress.setCountry(address.getCountry());
         savedAddress.setStreet(address.getStreet());
         savedAddress.setPostalCode(address.getPostalCode());
+        savedAddress.setUpdatedAt(address.getUpdatedAt());
 
         return addressRepository.save(savedAddress);
     }
