@@ -2,8 +2,10 @@ package com.wapanzi.baristajobsapi.domain.address.service;
 
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
+import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.BDDAssertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,14 +25,23 @@ public class AddressServiceImplIntegrationTest {
     @Autowired
     private AddressServiceImpl addressServiceImpl;
 
+    private Address address;
+    @BeforeEach
+    public void setup() {
+        address = new Address(
+                10001l,
+                "Nai",
+                "Kenya",
+                "Kaunda St",
+                "2323" ,
+                LocalDateTime.now(),
+                LocalDateTime.now());
+    }
+
     @Test
     void testGetAddressById_returnAddressDetails() {
         // given
-        Address savedAddress = addressRepository.save(
-                new Address(null, "Nai", "Kenya", "Kaunda St", "1212" ,
-                        LocalDateTime.now(),
-                        LocalDateTime.now())
-        );
+        Address savedAddress = addressRepository.save(address);
 
         // when
         Address fetchedAddress = addressServiceImpl.getAddressById(savedAddress.getId());
@@ -55,11 +66,7 @@ public class AddressServiceImplIntegrationTest {
     @Test
     void testUpdateAddressDetails_returnUpdatedAddress() {
         //given
-        Address savedAddress = addressRepository.save(
-                new Address(10001l, "Nai", "Kenya", "Kaunda St", "1212" ,
-                        LocalDateTime.now(),
-                        LocalDateTime.now())
-        );
+        Address savedAddress = addressRepository.save(address);
 
         // when
         Address updatedAddress = addressServiceImpl.updateAddressDetails(10001l,
@@ -81,12 +88,9 @@ public class AddressServiceImplIntegrationTest {
     void testUpdateAddressDetails_returnNotFoundException() {
         // given
         Long id = 23l;
-        Address updateAddress = new Address(23l, "Nai", "Kenya", "Kaunda St", "1212",
-                LocalDateTime.now(),
-                LocalDateTime.now());
 
         // when
-        Throwable throwable = catchThrowable(() -> addressServiceImpl.updateAddressDetails(id, updateAddress));
+        Throwable throwable = catchThrowable(() -> addressServiceImpl.updateAddressDetails(id, address));
 
         // then
         BDDAssertions.then(throwable).isInstanceOf(AddressNotFoundException.class);
@@ -95,23 +99,15 @@ public class AddressServiceImplIntegrationTest {
     @Test
     void testCreateAddress_returnNewAddress() {
         // given
-        Address newAddress = new Address(
-                null, "Kanairo",
-                "Kenya",
-                "Banda st",
-                "2323",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
 
         // when
-        Address savedAddress = addressServiceImpl.createAddress(newAddress);
+        Address savedAddress = addressServiceImpl.createAddress(address);
 
         // then
         then(savedAddress.getId()).isNotNull();
-        then(savedAddress.getCity()).isEqualTo("Kanairo");
+        then(savedAddress.getCity()).isEqualTo("Nai");
         then(savedAddress.getCountry()).isEqualTo("Kenya");
-        then(savedAddress.getPostalCode()).isEqualTo("Banda st");
+        then(savedAddress.getPostalCode()).isEqualTo("Kaunda St");
         then(savedAddress.getStreet()).isEqualTo("2323");
     }
 
