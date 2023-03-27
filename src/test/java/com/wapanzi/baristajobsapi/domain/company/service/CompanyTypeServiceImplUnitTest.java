@@ -1,8 +1,9 @@
 package com.wapanzi.baristajobsapi.domain.company.service;
 
+import com.wapanzi.baristajobsapi.domain.company.exception.CompanyTypeNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -60,5 +62,17 @@ public class CompanyTypeServiceImplUnitTest {
         then(foundCompanyType.getId()).isNotNull();
         then(foundCompanyType.getId()).isEqualTo(1l);
         then(foundCompanyType.getCompanyType()).isEqualTo("Barista");
+    }
+
+    @Test
+    void testGetCompanyType_forMissingCompanyType_returnNotFound() {
+        // given
+        Long id = 23l;
+
+        // when
+        Throwable throwable  = catchThrowable(() -> service.findCompanyTypeById(id));
+
+        // then
+        BDDAssertions.then(throwable).isInstanceOf(CompanyTypeNotFoundException.class);
     }
 }

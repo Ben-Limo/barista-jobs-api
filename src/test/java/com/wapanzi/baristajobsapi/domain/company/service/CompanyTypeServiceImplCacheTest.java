@@ -28,7 +28,10 @@ public class CompanyTypeServiceImplCacheTest {
     @Test
     void testGetCompanyType_forMultipleRequest_returnFromCache() {
         // given
-        Long id = 2L;
+        Long id = 2l;
+        given(repository.findById(anyLong())).willReturn(
+                Optional.of(new CompanyType(2l, "Barista", LocalDateTime.now(), LocalDateTime.now()))
+        );
 
         // when
         service.findCompanyTypeById(id);
