@@ -1,5 +1,6 @@
 package com.wapanzi.baristajobsapi.domain.company.controller;
 
+import com.wapanzi.baristajobsapi.domain.company.exception.CompanyTypeNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyTypeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,4 +51,18 @@ class CompanyTypeControllerIntegrationTest {
                 .andExpect(jsonPath("companyType").value("Brewery"));
 
     }
+
+    @Test
+    void testGetCompanyType_missingCompanyType_returnNotFound() throws Exception {
+        // given
+        given(service.findCompanyTypeById(anyLong())).willThrow(CompanyTypeNotFoundException.class);
+
+        // when
+        ResultActions response = mockMvc.perform(get("/company-type/1"));
+
+        // then
+        response
+                .andExpect(status().isNotFound());
+    }
+
 }
