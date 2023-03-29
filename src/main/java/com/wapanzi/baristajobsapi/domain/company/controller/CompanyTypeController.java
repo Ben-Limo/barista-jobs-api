@@ -2,11 +2,10 @@ package com.wapanzi.baristajobsapi.domain.company.controller;
 
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyTypeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,5 +15,10 @@ public class CompanyTypeController {
     @GetMapping("/company-type/{id}")
     public CompanyType getCompanyType(@PathVariable("id") Long id) {
         return service.findCompanyTypeById(id);
+    }
+
+    @PostMapping("/company-type")
+    public CompanyType createNewCompanyType(@Valid @RequestBody CompanyType companyType) {
+        return service.createNewCompanyType(companyType);
     }
 }

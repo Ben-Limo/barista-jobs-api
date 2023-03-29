@@ -1,5 +1,6 @@
 package com.wapanzi.baristajobsapi.domain.company.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wapanzi.baristajobsapi.domain.company.exception.CompanyTypeNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyTypeService;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -25,7 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CompanyTypeControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
-
+    @Autowired
+    private ObjectMapper objectMapper;
     @MockBean
     private CompanyTypeService service;
 
@@ -63,6 +66,23 @@ class CompanyTypeControllerIntegrationTest {
         // then
         response
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testCreateNewCompanyType_whenSuccessful_returnCreatedCompanyType() throws Exception{
+        // given
+        given(service.createNewCompanyType(any(CompanyType.class))).willReturn(companyType);
+
+        // when
+        ResultActions response = mockMvc.perform(post("/company-type")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(companyType)));
+
+        // then
+        response
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1L))
+                .andExpect(jsonPath("companyType").value("Brewery"));
     }
 
 }
