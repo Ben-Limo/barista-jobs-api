@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,5 +117,19 @@ class CompanyTypeControllerIntegrationTest {
 
         // then
         response.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testRemoveCompanyType_return200() throws Exception{
+        // given
+        willDoNothing().given(service).removeCompanyType(anyLong());
+
+        // when
+        ResultActions response = mockMvc.perform(
+                delete("/company-type/{id}", 1l)
+        );
+
+        // then
+        response.andExpect(status().isOk());
     }
 }
