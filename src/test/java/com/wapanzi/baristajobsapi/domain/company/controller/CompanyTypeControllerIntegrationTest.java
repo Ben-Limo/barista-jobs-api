@@ -85,4 +85,36 @@ class CompanyTypeControllerIntegrationTest {
                 .andExpect(jsonPath("companyType").value("Brewery"));
     }
 
+    @Test
+    void testUpdateCompanyType_whenSuccessful_returnUpdatedCompanyType() throws Exception {
+        // given
+        given(service.updateCompanyType(anyLong(), any(CompanyType.class))).willReturn(companyType);
+
+        // when
+        ResultActions response = mockMvc.perform(
+                post("/company-type/{id}", 1L)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(companyType)));
+
+        // then
+        response
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1L))
+                .andExpect(jsonPath("companyType").value("Brewery"));
+    }
+
+    @Test
+    void testUpdateCompanyType_whenMissing_returnNotFound() throws Exception {
+        // given
+        given(service.updateCompanyType(anyLong(), any(CompanyType.class))).willThrow(CompanyTypeNotFoundException.class);
+
+        // when
+        ResultActions response = mockMvc.perform(
+                post("/company-type/{id}", 1L)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(companyType)));
+
+        // then
+        response.andExpect(status().isNotFound());
+    }
 }

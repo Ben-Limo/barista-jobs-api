@@ -21,4 +21,10 @@ public class CompanyTypeController {
     public CompanyType createNewCompanyType(@Valid @RequestBody CompanyType companyType) {
         return service.createNewCompanyType(companyType);
     }
+
+    @PostMapping("/company-type/{id}")
+    public CompanyType createNewCompanyType(@PathVariable("id") Long id,
+                                            @Valid @RequestBody CompanyType companyType) {
+        return service.updateCompanyType(id, companyType);
+    }
 }
