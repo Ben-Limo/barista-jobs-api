@@ -1,9 +1,6 @@
 package com.wapanzi.baristajobsapi.domain.company.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -22,7 +19,7 @@ public class CompanyType {
     private Long id;
     @NotNull
     @Size(min = 2,  message = "Company type should have at least 2 characters")
-    private String companyType;
+    private String name;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

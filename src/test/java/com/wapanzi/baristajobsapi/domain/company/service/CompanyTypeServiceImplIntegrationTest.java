@@ -2,12 +2,10 @@ package com.wapanzi.baristajobsapi.domain.company.service;
 
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +34,7 @@ public class CompanyTypeServiceImplIntegrationTest {
 
         // then
         then(savedCompanyType.getId()).isNotNull();
-        then(savedCompanyType.getCompanyType()).isEqualTo("Barista");
+        then(savedCompanyType.getName()).isEqualTo("Barista");
     }
 
     @Test
@@ -52,6 +50,6 @@ public class CompanyTypeServiceImplIntegrationTest {
 
         // then
         then(updatedCompanyType.getId()).isEqualTo(1l);
-        then(updatedCompanyType.getCompanyType()).isEqualTo("Brewery");
+        then(updatedCompanyType.getName()).isEqualTo("Brewery");
     }
 }

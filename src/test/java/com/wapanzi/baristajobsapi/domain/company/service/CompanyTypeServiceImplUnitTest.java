@@ -48,7 +48,7 @@ public class CompanyTypeServiceImplUnitTest {
 
         // then
         then(savedCompanyType.getId()).isNotNull();
-        then(savedCompanyType.getCompanyType()).isEqualTo("Barista");
+        then(savedCompanyType.getName()).isEqualTo("Barista");
 
     }
 
@@ -64,7 +64,7 @@ public class CompanyTypeServiceImplUnitTest {
         // then
         then(foundCompanyType.getId()).isNotNull();
         then(foundCompanyType.getId()).isEqualTo(1l);
-        then(foundCompanyType.getCompanyType()).isEqualTo("Barista");
+        then(foundCompanyType.getName()).isEqualTo("Barista");
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CompanyTypeServiceImplUnitTest {
         // then
         then(updatedCompanyType.getId()).isNotNull();
         then(updatedCompanyType.getId()).isEqualTo(companyType.getId());
-        then(updatedCompanyType.getCompanyType()).isEqualTo(newUpdate.getCompanyType());
+        then(updatedCompanyType.getName()).isEqualTo(newUpdate.getName());
     }
 
     @Test

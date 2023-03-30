@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.service.AddressNotFoundException;
 import com.wapanzi.baristajobsapi.domain.address.service.AddressServiceImpl;
+import com.wapanzi.baristajobsapi.domain.company.model.Company;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

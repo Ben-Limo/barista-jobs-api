@@ -52,7 +52,7 @@ class CompanyTypeControllerIntegrationTest {
         response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
-                .andExpect(jsonPath("companyType").value("Brewery"));
+                .andExpect(jsonPath("name").value("Brewery"));
 
     }
 
@@ -83,7 +83,7 @@ class CompanyTypeControllerIntegrationTest {
         response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
-                .andExpect(jsonPath("companyType").value("Brewery"));
+                .andExpect(jsonPath("name").value("Brewery"));
     }
 
     @Test
@@ -101,7 +101,7 @@ class CompanyTypeControllerIntegrationTest {
         response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
-                .andExpect(jsonPath("companyType").value("Brewery"));
+                .andExpect(jsonPath("name").value("Brewery"));
     }
 
     @Test
