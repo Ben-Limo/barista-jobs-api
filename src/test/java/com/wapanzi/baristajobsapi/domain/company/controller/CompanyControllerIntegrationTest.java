@@ -83,4 +83,19 @@ class CompanyControllerIntegrationTest {
         response
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    void testUpdateCompany_whenSuccessful_returnCompanyDetails() throws Exception{
+        // given
+        given(companyService.updateCompany(anyLong(), any(Company.class))).willReturn(company);
+
+        // when
+        ResultActions response = mockMvc.perform(put("/companies/{id}", 1L)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(company)));
+
+        // then
+        response
+                .andExpect(status().isCreated());
+    }
 }
