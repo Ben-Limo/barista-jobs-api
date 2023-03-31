@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,24 +33,27 @@ public class CompanyServiceImpl implements CompanyService {
             company.setUpdatedAt(now);
             company.getAddress().setCreatedAt(now);
             company.getAddress().setUpdatedAt(now);
+            List<CompanyType> companyTypes = new ArrayList<>();
             for (CompanyType companyType : company.getCompanyTypes()) {
                 companyType = companyTypeRepository.findById(companyType.getId())
                         .orElseThrow(() -> new CompanyTypeNotFoundException());
-                companyType.setUpdatedAt(now);
+                companyTypes.add(companyType);
             }
+            company.setCompanyTypes(companyTypes);
         }
 
         return companies.stream().map(companyRepository::save).collect(Collectors.toList());
     }
 
     @Override
-    public Company updateCompany(Company company) {
+    public Company updateCompany(Long id, Company company) {
         LocalDateTime now = LocalDateTime.now();
 
-        Company savedCompany = companyRepository.findById(company.getId())
+        Company savedCompany = companyRepository.findById(id)
                 .orElseThrow(() -> new CompanyNotFoundException());
 
+        savedCompany.setName(company.getName());
         savedCompany.setUpdatedAt(now);
-        return companyRepository.save(company);
+        return companyRepository.save(savedCompany);
     }
 }

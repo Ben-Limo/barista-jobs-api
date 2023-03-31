@@ -47,7 +47,9 @@ class CompanyServiceImplIntegrationTest {
                 LocalDateTime.now());
         companyTypes = new ArrayList<>();
         companyTypes.add(companyType);
-        company = new Company(1L, "Brewery", address, companyTypes, LocalDateTime.now(), LocalDateTime.now());
+        company = new Company(1L, "Brewery", "admin@company.com",
+                "we are customer obsessed", address, companyTypes,
+                LocalDateTime.now(), LocalDateTime.now());
         companies.add(company);
     }
     @Test
@@ -68,14 +70,15 @@ class CompanyServiceImplIntegrationTest {
     @Test
     void testUpdateCompany_whenSuccessful_returnCompanyDetails() {
         // given
-        Company updateCompany = new Company(1L, "Coffee House", address, companyTypes,
+        Company updateCompany = new Company(1L, "Coffee House", "info@company.com",
+                "description about the company", address, companyTypes,
                 LocalDateTime.now(), LocalDateTime.now());
 
         given(companyRepository.findById(anyLong())).willReturn(Optional.of(company));
         given(companyRepository.save(any(Company.class))).willReturn(updateCompany);
 
         // when
-        Company updatedCompany = service.updateCompany(updateCompany);
+        Company updatedCompany = service.updateCompany(1L, updateCompany);
 
         // then
         then(updatedCompany.getId()).isNotNull();

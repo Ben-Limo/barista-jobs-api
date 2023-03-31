@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -23,6 +21,14 @@ public class CompanyController {
     @PostMapping("/companies")
     public ResponseEntity<?> addNewCompany(@Valid @RequestBody List<Company> companies) {
         List<Company> savedCompany = service.addNewCompany(companies);
+
+        return new ResponseEntity<>(savedCompany, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/companies/{id}")
+    public ResponseEntity<?> updateCompany(@PathVariable Long id,
+                                           @Valid @RequestBody Company company) {
+        Company savedCompany = service.updateCompany(id, company);
 
         return new ResponseEntity<>(savedCompany, HttpStatus.CREATED);
     }

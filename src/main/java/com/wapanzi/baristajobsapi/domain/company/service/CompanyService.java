@@ -11,5 +11,5 @@ import java.util.Set;
 @Component
 public interface CompanyService {
     List<Company> addNewCompany(List<Company> company);
-    Company updateCompany(Company company);
+    Company updateCompany(Long id, Company company);
 }

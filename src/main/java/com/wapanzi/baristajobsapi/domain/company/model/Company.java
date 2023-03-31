@@ -2,6 +2,7 @@ package com.wapanzi.baristajobsapi.domain.company.model;
 
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,12 @@ public class Company {
 
     @Size(min = 2, message = "Company name should have at least 2 characters")
     private String name;
+
+    @Email(message = "Wrong input. please enter a valid email address")
+    private String email;
+
+    @Size(min = 10, message = "Description should have at least 50 characters")
+    private String description;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
