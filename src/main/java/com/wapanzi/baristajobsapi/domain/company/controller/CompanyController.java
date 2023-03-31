@@ -32,4 +32,11 @@ public class CompanyController {
 
         return new ResponseEntity<>(savedCompany, HttpStatus.CREATED);
     }
+
+    @GetMapping("/companies/{id}")
+    public ResponseEntity<?> getCompany(@PathVariable Long id) {
+        Company savedCompany = service.getCompany(id);
+
+        return new ResponseEntity<>(savedCompany, HttpStatus.FOUND);
+    }
 }
