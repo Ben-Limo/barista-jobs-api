@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -96,6 +97,20 @@ class CompanyControllerIntegrationTest {
 
         // then
         response
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testRemoveCompany_whenSuccessful_return200() throws Exception{
+        // given
+        willDoNothing().given(companyService).removeCompany(anyLong());
+
+        // when
+        ResultActions response =
+                mockMvc.perform(delete("/companies/{id}", 1L));
+
+        // then
+        response
+                .andExpect(status().isOk());
     }
 }

@@ -30,7 +30,7 @@ public class CompanyController {
                                            @Valid @RequestBody Company company) {
         Company savedCompany = service.updateCompany(id, company);
 
-        return new ResponseEntity<>(savedCompany, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedCompany, HttpStatus.OK);
     }
 
     @GetMapping("/companies/{id}")
@@ -38,5 +38,12 @@ public class CompanyController {
         Company savedCompany = service.getCompany(id);
 
         return new ResponseEntity<>(savedCompany, HttpStatus.FOUND);
+    }
+
+    @DeleteMapping("/companies/{id}")
+    public ResponseEntity<?> removeCompany(@PathVariable Long id) {
+        service.removeCompany(id);
+
+        return new ResponseEntity<>("Company deleted successfully ", HttpStatus.OK);
     }
 }
