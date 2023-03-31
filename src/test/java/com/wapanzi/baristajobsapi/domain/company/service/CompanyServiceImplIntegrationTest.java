@@ -37,13 +37,15 @@ class CompanyServiceImplIntegrationTest {
     private Company company;
     private List<Company> companies = new ArrayList<>();
     private CompanyType companyType;
+    private Address address;
+    private List<CompanyType> companyTypes;
     @BeforeEach
     void setup() {
-        Address address = new Address(1L, "Nai", "Kenya",
+        address = new Address(1L, "Nai", "Kenya",
                 "Kaunda St", "2323" , LocalDateTime.now(), LocalDateTime.now());
         companyType = new CompanyType(1L, "Barista", LocalDateTime.now(),
                 LocalDateTime.now());
-        List<CompanyType> companyTypes = new ArrayList<>();
+        companyTypes = new ArrayList<>();
         companyTypes.add(companyType);
         company = new Company(1L, "Brewery", address, companyTypes, LocalDateTime.now(), LocalDateTime.now());
         companies.add(company);
@@ -61,5 +63,22 @@ class CompanyServiceImplIntegrationTest {
         then(savedCompanies.get(0).getId()).isNotNull();
         then(savedCompanies.get(0).getName()).isEqualTo("Brewery");
 
+    }
+
+    @Test
+    void testUpdateCompany_whenSuccessful_returnCompanyDetails() {
+        // given
+        Company updateCompany = new Company(1L, "Coffee House", address, companyTypes,
+                LocalDateTime.now(), LocalDateTime.now());
+
+        given(companyRepository.findById(anyLong())).willReturn(Optional.of(company));
+        given(companyRepository.save(any(Company.class))).willReturn(updateCompany);
+
+        // when
+        Company updatedCompany = service.updateCompany(updateCompany);
+
+        // then
+        then(updatedCompany.getId()).isNotNull();
+        then(updatedCompany.getName()).isEqualTo("Coffee House");
     }
 }
