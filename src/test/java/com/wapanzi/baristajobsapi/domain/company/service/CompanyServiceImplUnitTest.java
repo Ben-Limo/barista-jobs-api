@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringBootTest(webEnvironment = NONE)
-class CompanyServiceImplIntegrationTest {
+class CompanyServiceImplUnitTest {
     @Autowired
     private CompanyServiceImpl service;
 
@@ -84,4 +84,19 @@ class CompanyServiceImplIntegrationTest {
         then(updatedCompany.getId()).isNotNull();
         then(updatedCompany.getName()).isEqualTo("Coffee House");
     }
+
+    @Test
+    void testGetCompany_whenSuccessful_returnCompanyDetails() {
+        // given
+        given(companyRepository.findById(anyLong())).willReturn(Optional.of(company));
+
+        // when
+        Company savedCompany = service.getCompany(anyLong());
+
+        // then
+        then(savedCompany.getId()).isNotNull();
+        then(savedCompany.getName()).isEqualTo("Brewery");
+        then(savedCompany.getEmail()).isEqualTo("admin@company.com");
+    }
+
 }

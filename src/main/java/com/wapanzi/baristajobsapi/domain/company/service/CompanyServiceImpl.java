@@ -56,4 +56,13 @@ public class CompanyServiceImpl implements CompanyService {
         savedCompany.setUpdatedAt(now);
         return companyRepository.save(savedCompany);
     }
+
+    @Override
+    public Company getCompany(long id) {
+        Company savedCompany = companyRepository.findById(id).orElseThrow(
+                () -> new CompanyNotFoundException()
+        );
+
+        return savedCompany;
+    }
 }

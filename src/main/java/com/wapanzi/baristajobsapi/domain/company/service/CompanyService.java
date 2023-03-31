@@ -12,4 +12,6 @@ import java.util.Set;
 public interface CompanyService {
     List<Company> addNewCompany(List<Company> company);
     Company updateCompany(Long id, Company company);
+
+    Company getCompany(long anyLong);
 }
