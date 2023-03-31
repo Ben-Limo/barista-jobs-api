@@ -14,4 +14,6 @@ public interface CompanyService {
     Company updateCompany(Long id, Company company);
 
     Company getCompany(long anyLong);
+
+    void removeCompany(long id);
 }

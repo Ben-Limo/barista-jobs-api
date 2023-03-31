@@ -7,6 +7,7 @@ import com.wapanzi.baristajobsapi.domain.company.repository.CompanyRepository;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.times;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringBootTest(webEnvironment = NONE)
@@ -97,6 +99,18 @@ class CompanyServiceImplUnitTest {
         then(savedCompany.getId()).isNotNull();
         then(savedCompany.getName()).isEqualTo("Brewery");
         then(savedCompany.getEmail()).isEqualTo("admin@company.com");
+    }
+
+    @Test
+    void testRemoveCompany_whenSuccessful_return200() {
+        // given
+        willDoNothing().given(companyRepository).deleteById(anyLong());
+
+        // when
+        service.removeCompany(1L);
+
+        // then
+        BDDMockito.then(companyRepository).should(times(1)).deleteById(anyLong());
     }
 
 }
