@@ -7,6 +7,8 @@ import com.wapanzi.baristajobsapi.domain.company.repository.CompanyRepository;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
 import com.wapanzi.baristajobsapi.domain.job.model.Job;
 import com.wapanzi.baristajobsapi.domain.job.model.JobType;
+import com.wapanzi.baristajobsapi.domain.job.repository.JobRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +33,18 @@ class JobServiceImplIntegrationTest {
     @Autowired
     private CompanyTypeRepository companyTypeRepository;
 
-    private Company company;
-    private List<Company> companies = new ArrayList<>();
-    private CompanyType companyType;
-    private Address address;
-    private List<CompanyType> companyTypes = new ArrayList<>();
-    @BeforeEach
-    void setup() {
+    @Autowired
+    private JobRepository jobRepository;
+
+    private static Company company;
+    private static List<Company> companies = new ArrayList<>();
+    private static CompanyType companyType;
+    private static Address address;
+    private static List<CompanyType> companyTypes = new ArrayList<>();
+    private static Job newJob;
+
+    @BeforeAll
+    static void setup() {
         address = new Address(1L, "Nai", "Kenya",
                 "Kaunda St", "2323" , LocalDateTime.now(), LocalDateTime.now());
         companyType = new CompanyType(1L, "Barista", LocalDateTime.now(),
@@ -47,13 +54,8 @@ class JobServiceImplIntegrationTest {
                 "we are customer obsessed", address, companyTypes,
                 LocalDateTime.now(), LocalDateTime.now());
         companies.add(company);
-    }
-    @Test
-    void testAddNewJob_whenSuccessful_returnJobDetails() {
-        // given
-        companyTypeRepository.save(companyType);
-        companyRepository.save(company);
-        Job newJob = Job.builder()
+
+        newJob = Job.builder()
                 .title("Barista")
                 .description("Make tasteful cups of coffee")
                 .jobType(JobType.FULL_TIME)
@@ -61,6 +63,13 @@ class JobServiceImplIntegrationTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+    }
+
+    @Test
+    void testAddNewJob_whenSuccessful_returnJobDetails() {
+        // given
+        companyTypeRepository.save(companyType);
+        companyRepository.save(company);
 
         // when
         Job savedJob = service.addNewJob(newJob);
@@ -69,6 +78,30 @@ class JobServiceImplIntegrationTest {
         then(savedJob.getId()).isNotNull();
         then(savedJob.getTitle()).isEqualTo("Barista");
         then(savedJob.getJobType()).isEqualTo(JobType.FULL_TIME);
+    }
 
+    @Test
+    void testUpdateCompany_whenSuccessful_returnJobDetails() {
+       // given
+        Job updateJob = Job.builder()
+                .title("Roaster")
+                .description("Roast green coffee beans")
+                .jobType(JobType.PART_TIME)
+                .company(company)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        companyTypeRepository.save(companyType);
+        companyRepository.save(company);
+        Job savedJob = jobRepository.save(newJob);
+
+       // when
+        Job updatedJob = service.updateCompany(1L, updateJob);
+
+       // then
+        then(updatedJob.getId()).isEqualTo(1L);
+        then(updatedJob.getTitle()).isEqualTo("Roaster");
+        then(updatedJob.getJobType()).isEqualTo(JobType.PART_TIME);
     }
 }

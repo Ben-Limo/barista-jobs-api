@@ -1,9 +1,12 @@
 package com.wapanzi.baristajobsapi.domain.job.service;
 
+import com.wapanzi.baristajobsapi.domain.job.exception.JobNotFoundException;
 import com.wapanzi.baristajobsapi.domain.job.model.Job;
 import com.wapanzi.baristajobsapi.domain.job.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class JobServiceImpl implements JobService{
@@ -12,5 +15,18 @@ public class JobServiceImpl implements JobService{
     @Override
     public Job addNewJob(Job job) {
         return repository.save(job);
+    }
+
+    @Override
+    public Job updateCompany(Long id, Job updateJob) {
+        Job savedCompany = repository.findById(id).orElseThrow(
+                () -> new JobNotFoundException());
+
+        savedCompany.setJobType(updateJob.getJobType());
+        savedCompany.setTitle(updateJob.getTitle());
+        savedCompany.setDescription(updateJob.getDescription());
+        savedCompany.setUpdatedAt(LocalDateTime.now());
+
+        return repository.save(savedCompany);
     }
 }

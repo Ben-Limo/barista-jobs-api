@@ -6,4 +6,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface JobService {
     Job addNewJob(Job job);
+
+    Job updateCompany(Long id, Job updateJob);
 }
