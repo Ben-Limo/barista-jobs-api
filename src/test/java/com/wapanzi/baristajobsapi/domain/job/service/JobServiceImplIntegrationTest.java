@@ -11,6 +11,7 @@ import com.wapanzi.baristajobsapi.domain.job.repository.JobRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.Mockito.times;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,4 +123,5 @@ class JobServiceImplIntegrationTest {
         then(foundJob.getTitle()).isEqualTo("Barista");
         then(foundJob.getJobType()).isEqualTo(JobType.FULL_TIME);
     }
+
 }

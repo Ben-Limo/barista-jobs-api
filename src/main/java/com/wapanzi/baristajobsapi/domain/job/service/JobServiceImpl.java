@@ -37,4 +37,9 @@ public class JobServiceImpl implements JobService{
 
         return foundJob;
     }
+
+    @Override
+    public void removeJob(long id) {
+        repository.deleteById(id);
+    }
 }
