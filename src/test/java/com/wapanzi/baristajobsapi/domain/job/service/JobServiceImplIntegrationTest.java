@@ -104,4 +104,21 @@ class JobServiceImplIntegrationTest {
         then(updatedJob.getTitle()).isEqualTo("Roaster");
         then(updatedJob.getJobType()).isEqualTo(JobType.PART_TIME);
     }
+
+    @Test
+    void testGetJob_whenSuccessful_returnJobDetails() {
+        // given
+        companyTypeRepository.save(companyType);
+        companyRepository.save(company);
+        jobRepository.save(newJob);
+
+        // when
+        Job foundJob = service.getJob(1L);
+
+        // then
+        then(foundJob.getId()).isNotNull();
+        then(foundJob.getId()).isEqualTo(1L);
+        then(foundJob.getTitle()).isEqualTo("Barista");
+        then(foundJob.getJobType()).isEqualTo(JobType.FULL_TIME);
+    }
 }

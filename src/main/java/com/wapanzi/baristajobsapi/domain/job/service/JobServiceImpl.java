@@ -29,4 +29,12 @@ public class JobServiceImpl implements JobService{
 
         return repository.save(savedCompany);
     }
+
+    @Override
+    public Job getJob(long id) {
+        Job foundJob = repository.findById(id).orElseThrow(
+                () -> new JobNotFoundException());
+
+        return foundJob;
+    }
 }
