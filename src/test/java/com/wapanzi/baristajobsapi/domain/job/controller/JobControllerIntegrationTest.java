@@ -1,5 +1,6 @@
 package com.wapanzi.baristajobsapi.domain.job.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.company.model.Company;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
@@ -19,8 +20,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,6 +35,9 @@ class JobControllerIntegrationTest {
 
     @MockBean
     private JobService service;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private static Company company;
     private static CompanyType companyType;
@@ -89,6 +95,23 @@ class JobControllerIntegrationTest {
         // then
         response
                 .andExpect(status().isFound())
+                .andExpect(jsonPath("title").value("Barista"))
+                .andExpect(jsonPath("description").value("Make tasteful cups of coffee"));
+    }
+
+    @Test
+    void testAddNewJob_whenSuccessful_returnJobDetails() throws  Exception{
+        // given
+        given(service.addNewJob(any(Job.class))).willReturn(newJob);
+
+        // when
+        ResultActions response = mockMvc.perform(post("/jobs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newJob)));
+
+        // then
+        response
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("title").value("Barista"))
                 .andExpect(jsonPath("description").value("Make tasteful cups of coffee"));
     }

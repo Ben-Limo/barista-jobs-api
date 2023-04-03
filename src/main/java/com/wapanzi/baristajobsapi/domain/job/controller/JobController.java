@@ -2,12 +2,11 @@ package com.wapanzi.baristajobsapi.domain.job.controller;
 
 import com.wapanzi.baristajobsapi.domain.job.model.Job;
 import com.wapanzi.baristajobsapi.domain.job.service.JobService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +26,11 @@ public class JobController {
     public ResponseEntity<?> getJobs(@PathVariable Long id) {
         Job job = service.getJobById(id);
         return new ResponseEntity<>(job, HttpStatus.FOUND);
+    }
+
+    @PostMapping("/jobs")
+    public ResponseEntity<?> getAllJobs(@Valid @RequestBody Job job) {
+        Job newJob = service.addNewJob(job);
+        return new ResponseEntity<>(newJob, HttpStatus.CREATED);
     }
 }
