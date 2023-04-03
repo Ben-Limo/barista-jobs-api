@@ -124,4 +124,19 @@ class JobServiceImplIntegrationTest {
         then(foundJob.getJobType()).isEqualTo(JobType.FULL_TIME);
     }
 
+    @Test
+    void testGetAllJobs_whenSuccessful_returnListOfJobs() {
+        // given
+        companyTypeRepository.save(companyType);
+        companyRepository.save(company);
+        jobRepository.save(newJob);
+
+        // when
+        List<Job> jobs = service.getAllJobs();
+
+        // then
+        then(jobs.get(0).getId()).isNotNull();
+        then(jobs.get(0).getTitle()).isEqualTo("Barista");
+    }
+
 }
