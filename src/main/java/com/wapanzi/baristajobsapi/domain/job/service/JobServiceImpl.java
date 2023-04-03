@@ -19,7 +19,7 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public Job updateCompany(Long id, Job updateJob) {
+    public Job updateJob(Long id, Job updateJob) {
         Job savedCompany = repository.findById(id).orElseThrow(
                 () -> new JobNotFoundException());
 

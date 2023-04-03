@@ -23,10 +23,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @WebMvcTest(controllers = JobController.class)
 class JobControllerIntegrationTest {
@@ -115,4 +114,21 @@ class JobControllerIntegrationTest {
                 .andExpect(jsonPath("title").value("Barista"))
                 .andExpect(jsonPath("description").value("Make tasteful cups of coffee"));
     }
+
+    @Test
+    void testUpdateJob_whenSuccessful_returnUpdatedJobDetails() throws Exception{
+        // given
+        given(service.updateJob(anyLong(), any(Job.class))).willReturn(newJob);
+        // when
+        ResultActions response = mockMvc.perform(put("/jobs/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newJob)));
+
+        // then
+        response
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("title").value("Barista"))
+                .andExpect(jsonPath("description").value("Make tasteful cups of coffee"));
+    }
+
 }

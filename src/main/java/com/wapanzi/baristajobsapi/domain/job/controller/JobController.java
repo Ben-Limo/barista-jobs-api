@@ -29,8 +29,16 @@ public class JobController {
     }
 
     @PostMapping("/jobs")
-    public ResponseEntity<?> getAllJobs(@Valid @RequestBody Job job) {
+    public ResponseEntity<?> addNewJob(@Valid @RequestBody Job job) {
         Job newJob = service.addNewJob(job);
         return new ResponseEntity<>(newJob, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/jobs/{id}")
+    public ResponseEntity<?> updateJob(@PathVariable Long id,
+                                       @Valid @RequestBody Job job) {
+        Job updatedJob = service.updateJob(id, job);
+
+        return new ResponseEntity<>(updatedJob, HttpStatus.OK);
     }
 }

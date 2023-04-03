@@ -95,7 +95,7 @@ class JobServiceImplIntegrationTest {
         Job savedJob = jobRepository.save(newJob);
 
        // when
-        Job updatedJob = service.updateCompany(1L, updateJob);
+        Job updatedJob = service.updateJob(1L, updateJob);
 
        // then
         then(updatedJob.getId()).isEqualTo(1L);

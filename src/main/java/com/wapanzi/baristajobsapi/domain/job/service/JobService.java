@@ -9,7 +9,7 @@ import java.util.List;
 public interface JobService {
     Job addNewJob(Job job);
 
-    Job updateCompany(Long id, Job updateJob);
+    Job updateJob(Long id, Job updateJob);
     Job getJobById(long id);
     List<Job>  getAllJobs();
     void removeJob(long id);
