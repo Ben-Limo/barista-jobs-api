@@ -23,6 +23,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -129,6 +130,20 @@ class JobControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("title").value("Barista"))
                 .andExpect(jsonPath("description").value("Make tasteful cups of coffee"));
+    }
+
+    @Test
+    void testRemoveJob_whenSuccessful_return200() throws Exception{
+        // given
+        willDoNothing().given(service).removeJob(anyLong());
+
+        // when
+        ResultActions response = mockMvc.perform(delete("/jobs/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        response
+                .andExpect(status().isOk());
     }
 
 }
