@@ -32,7 +32,7 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public Job getJob(long id) {
+    public Job getJobById(long id) {
         Job foundJob = repository.findById(id).orElseThrow(
                 () -> new JobNotFoundException());
 

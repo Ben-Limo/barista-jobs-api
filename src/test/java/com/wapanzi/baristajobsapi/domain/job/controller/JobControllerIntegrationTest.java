@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,5 +75,21 @@ class JobControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*").isArray())
                 .andExpect(jsonPath("$[0].title").value("Barista"));
+    }
+
+    @Test
+    void testGetJob_whenSuccessful_returnJobDetails() throws Exception{
+        // given
+        given(service.getJobById(anyLong())).willReturn(newJob);
+
+        // when
+        ResultActions response = mockMvc.perform(get("/jobs/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        response
+                .andExpect(status().isFound())
+                .andExpect(jsonPath("title").value("Barista"))
+                .andExpect(jsonPath("description").value("Make tasteful cups of coffee"));
     }
 }
