@@ -24,6 +24,7 @@ public class Job {
     private String title;
 
     @Size(min = 10, message = "Job title should have at least 10 characters")
+    @Lob
     private String description;
 
     @Enumerated(EnumType.STRING)
