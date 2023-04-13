@@ -1,6 +1,8 @@
 package com.wapanzi.baristajobsapi.domain.company.service;
 
+import com.wapanzi.baristajobsapi.domain.address.dto.AddressDto;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
+import com.wapanzi.baristajobsapi.domain.company.dto.*;
 import com.wapanzi.baristajobsapi.domain.company.exception.CompanyNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.exception.CompanyTypeNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.model.Company;
@@ -23,46 +25,66 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
     @Autowired
     private CompanyTypeRepository companyTypeRepository;
-
-
+    @Autowired
+    private CompanyDtoMapper companyDtoMapper;
     @Override
-    public List<Company> addNewCompany(List<Company> companies) {
+    public List<Company> addListOfNewCompanies(List<CreateCompanyRequest> createCompanyRequest) {
         LocalDateTime now = LocalDateTime.now();
-        for (Company company : companies) {
+        List<Company> companies = new ArrayList<>();
+        for (CreateCompanyRequest companyRequest : createCompanyRequest) {
+            Company company = new Company();
+            Address address = new Address();
+            address.setUpdatedAt(LocalDateTime.now());
+            company.setName(companyRequest.name());
+            company.setEmail(companyRequest.email());
+            company.setDescription(companyRequest.description());
             company.setCreatedAt(now);
             company.setUpdatedAt(now);
-            company.getAddress().setCreatedAt(now);
-            company.getAddress().setUpdatedAt(now);
+            address.setCity(companyRequest.address().city());
+            address.setStreet(companyRequest.address().street());
+            address.setCountry(companyRequest.address().country());
+            address.setPostalCode(companyRequest.address().postalCode());
+            address.setCreatedAt(LocalDateTime.now());
+            company.setAddress(address);
             List<CompanyType> companyTypes = new ArrayList<>();
-            for (CompanyType companyType : company.getCompanyTypes()) {
-                companyType = companyTypeRepository.findById(companyType.getId())
+            for (CompanyTypeDto companyTypeReq : companyRequest.companyTypes()) {
+                CompanyType companyType = companyTypeRepository.findById(companyTypeReq.id())
                         .orElseThrow(() -> new CompanyTypeNotFoundException());
                 companyTypes.add(companyType);
             }
             company.setCompanyTypes(companyTypes);
+            companies.add(company);
         }
 
         return companies.stream().map(companyRepository::save).collect(Collectors.toList());
     }
 
     @Override
-    public Company updateCompany(Long id, Company company) {
-        LocalDateTime now = LocalDateTime.now();
+    public Company updateCompany(Long id, CompanyDto companyDto) {
 
         Company savedCompany = companyRepository.findById(id)
                 .orElseThrow(() -> new CompanyNotFoundException());
 
-        savedCompany.setName(company.getName());
-        savedCompany.setUpdatedAt(now);
+        savedCompany.setName(companyDto.name());
+        savedCompany.setEmail(companyDto.email());
+        savedCompany.setDescription(companyDto.description());
+        savedCompany.getAddress().setCity(companyDto.address().city());
+        savedCompany.getAddress().setStreet(companyDto.address().street());
+        savedCompany.getAddress().setCountry(companyDto.address().country());
+        savedCompany.getAddress().setPostalCode(companyDto.address().postalCode());
+        savedCompany.getAddress().setUpdatedAt(LocalDateTime.now());
+        // update company type pending
+        savedCompany.setUpdatedAt(LocalDateTime.now());
         return companyRepository.save(savedCompany);
     }
 
     @Override
-    public Company getCompany(long id) {
-        Company savedCompany = companyRepository.findById(id).orElseThrow(
+    public CompanyDto getCompany(long id) {
+        CompanyDto savedCompany = companyRepository.findById(id)
+                .map(companyDtoMapper)
+                .orElseThrow(
                 () -> new CompanyNotFoundException()
         );
-
         return savedCompany;
     }
 

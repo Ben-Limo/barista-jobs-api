@@ -1,11 +1,15 @@
 package com.wapanzi.baristajobsapi.domain.company.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wapanzi.baristajobsapi.domain.address.dto.AddressDto;
+import com.wapanzi.baristajobsapi.domain.address.dto.CreateAddressRequest;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyTypeDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CreateCompanyRequest;
 import com.wapanzi.baristajobsapi.domain.company.model.Company;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyService;
-import com.wapanzi.baristajobsapi.domain.company.service.CompanyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +26,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,48 +40,89 @@ class CompanyControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private CompanyDto companyDto;
     private Company company;
-    private List<Company> companies = new ArrayList<>();
+    private List<CompanyDto> companiesDto = new ArrayList<>();
+    private List<Company> companyList = new ArrayList<>();
+    private CompanyTypeDto companyTypeDto;
     private CompanyType companyType;
+    private AddressDto addressDto;
     private Address address;
-    private List<CompanyType> companyTypes;
+    private List<CompanyTypeDto> companyTypes;
     @BeforeEach
     void setup() {
-        address = new Address(1L, "Nai", "Kenya",
-                "Kaunda St", "2323" , LocalDateTime.now(), LocalDateTime.now());
-        companyType = new CompanyType(1L, "Barista", LocalDateTime.now(),
-                LocalDateTime.now());
+        addressDto = new AddressDto(1L, "Nai", "Kenya",
+                "Kaunda St", "2323");
+        companyTypeDto = new CompanyTypeDto(1L, "Barista");
+
         companyTypes = new ArrayList<>();
-        companyTypes.add(companyType);
+        companyTypes.add(companyTypeDto);
+        companyDto = new CompanyDto(1L, "Brewery", "admin@company.com",
+                "we are customer obsessed", addressDto, companyTypes);
+        companyType = new CompanyType(1L, "Barista", LocalDateTime.now(), LocalDateTime.now());
+        address = new Address(1L, "Nai", "Kenya",
+                "Kaunda St", "2323", LocalDateTime.now(), LocalDateTime.now());
+        List<CompanyType> companyTypeList = new ArrayList<>();
+        companyTypeList.add(companyType);
         company = new Company(1L, "Brewery", "admin@company.com",
-                "we are customer obsessed", address, companyTypes,
-                LocalDateTime.now(), LocalDateTime.now());
-        companies.add(company);
+                "we are customer obsessed", address, companyTypeList, LocalDateTime.now(), LocalDateTime.now());
+
+        companiesDto.add(companyDto);
+        address = new Address(
+                1L,
+                "Nai", "Kenya",
+                "Kaunda St", "2323",
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        company = new Company(
+                1L,
+                "Brewery", "admin@company.com",
+                "we are customer obsessed",
+                address,
+                List.of(companyType),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        companyList.add(company);
     }
     @Test
     void testGetCompany_whenSuccessful_returnCompanyDetails() throws Exception {
         // given
-        given(companyService.getCompany(anyLong())).willReturn(company);
+       given(companyService.getCompany(anyLong())).willReturn(companyDto);
 
         // when
         ResultActions actions = mockMvc.perform(get("/companies/{id}", 1L));
 
         // then
         actions
-                .andExpect(status().isFound())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("name").value("Brewery"));
     }
 
     @Test
-    void testAddNewCompany_whenSuccessful_returnCompanyDetails() throws Exception {
+    void testAddNewCompany_whenSuccessful_return200() throws Exception {
         // given
-        given(companyService.addNewCompany(anyList())).willReturn(companies);
+        List<CreateCompanyRequest> createCompaniesList = new ArrayList<>();
+        CreateAddressRequest createAddressRequest = new CreateAddressRequest(
+                "Nai", "Kenya",
+                "Kaunda St", "2323"
+        );
+        CreateCompanyRequest companyRequest = new CreateCompanyRequest(
+                "Brewery", "admin@company.com",
+                "we are customer obsessed",
+                createAddressRequest,
+                companyTypes
+        );
+
+        createCompaniesList.add(companyRequest);
+        given(companyService.addListOfNewCompanies(anyList())).willReturn(companyList);
 
         // when
         ResultActions response = mockMvc.perform(post("/companies")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(companies)));
+                .content(objectMapper.writeValueAsString(createCompaniesList)));
 
         // then
         response
@@ -86,14 +130,14 @@ class CompanyControllerIntegrationTest {
     }
 
     @Test
-    void testUpdateCompany_whenSuccessful_returnCompanyDetails() throws Exception{
+    void testUpdateCompany_whenSuccessful_return200() throws Exception{
         // given
-        given(companyService.updateCompany(anyLong(), any(Company.class))).willReturn(company);
+        given(companyService.updateCompany(anyLong(), any(CompanyDto.class))).willReturn(company);
 
         // when
         ResultActions response = mockMvc.perform(put("/companies/{id}", 1L)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(company)));
+                .content(objectMapper.writeValueAsString(companyDto)));
 
         // then
         response

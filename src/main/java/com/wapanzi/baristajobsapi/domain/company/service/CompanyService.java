@@ -1,19 +1,18 @@
 package com.wapanzi.baristajobsapi.domain.company.service;
 
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CreateCompanyRequest;
 import com.wapanzi.baristajobsapi.domain.company.model.Company;
-import com.wapanzi.baristajobsapi.domain.company.repository.CompanyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 public interface CompanyService {
-    List<Company> addNewCompany(List<Company> company);
-    Company updateCompany(Long id, Company company);
+    List<Company> addListOfNewCompanies(List<CreateCompanyRequest> createCompanyRequest);
+    Company updateCompany(Long id, CompanyDto companyDto);
 
-    Company getCompany(long anyLong);
+    CompanyDto getCompany(long anyLong);
 
     void removeCompany(long id);
 }

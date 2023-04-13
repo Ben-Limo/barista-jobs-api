@@ -1,5 +1,7 @@
 package com.wapanzi.baristajobsapi.domain.company.controller;
 
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CreateCompanyRequest;
 import com.wapanzi.baristajobsapi.domain.company.model.Company;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyService;
 import jakarta.validation.Valid;
@@ -10,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,25 +20,23 @@ public class CompanyController {
     private final CompanyService service;
 
     @PostMapping("/companies")
-    public ResponseEntity<?> addNewCompany(@Valid @RequestBody List<Company> companies) {
-        List<Company> savedCompany = service.addNewCompany(companies);
-
-        return new ResponseEntity<>(savedCompany, HttpStatus.CREATED);
+    public ResponseEntity<String> addListOfNewCompanies(
+            @Valid @RequestBody List<CreateCompanyRequest> request) {
+        service.addListOfNewCompanies(request);
+        return new ResponseEntity<>("Created successfully", HttpStatus.CREATED);
     }
 
     @PutMapping("/companies/{id}")
-    public ResponseEntity<?> updateCompany(@PathVariable Long id,
-                                           @Valid @RequestBody Company company) {
-        Company savedCompany = service.updateCompany(id, company);
+    public ResponseEntity<String> updateCompany(@PathVariable Long id,
+                                           @Valid @RequestBody CompanyDto companyDto) {
+        service.updateCompany(id, companyDto);
 
-        return new ResponseEntity<>(savedCompany, HttpStatus.OK);
+        return new ResponseEntity<>("Updated Successfully", HttpStatus.OK);
     }
 
     @GetMapping("/companies/{id}")
-    public ResponseEntity<?> getCompany(@PathVariable Long id) {
-        Company savedCompany = service.getCompany(id);
-
-        return new ResponseEntity<>(savedCompany, HttpStatus.FOUND);
+    public CompanyDto getCompany(@PathVariable Long id) {
+        return service.getCompany(id);
     }
 
     @DeleteMapping("/companies/{id}")

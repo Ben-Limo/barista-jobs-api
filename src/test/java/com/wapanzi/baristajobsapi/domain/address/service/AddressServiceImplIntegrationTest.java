@@ -1,8 +1,9 @@
 package com.wapanzi.baristajobsapi.domain.address.service;
 
+import com.wapanzi.baristajobsapi.domain.address.dto.AddressDto;
+import com.wapanzi.baristajobsapi.domain.address.dto.CreateAddressRequest;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
-import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +34,11 @@ public class AddressServiceImplIntegrationTest {
                 "Nai",
                 "Kenya",
                 "Kaunda St",
-                "2323" ,
+                "2323",
                 LocalDateTime.now(),
-                LocalDateTime.now());
+                LocalDateTime.now()
+        );
+
     }
 
     @Test
@@ -44,11 +47,11 @@ public class AddressServiceImplIntegrationTest {
         Address savedAddress = addressRepository.save(address);
 
         // when
-        Address fetchedAddress = addressServiceImpl.getAddressById(savedAddress.getId());
+        AddressDto fetchedAddress = addressServiceImpl.getAddressById(savedAddress.getId());
 
         // then
-        then(fetchedAddress.getId()).isNotNull();
-        then(fetchedAddress.getCity()).isEqualTo(savedAddress.getCity());
+        then(fetchedAddress.id()).isNotNull();
+        then(fetchedAddress.city()).isEqualTo(savedAddress.getCity());
     }
 
     @Test
@@ -70,9 +73,12 @@ public class AddressServiceImplIntegrationTest {
 
         // when
         Address updatedAddress = addressServiceImpl.updateAddressDetails(10001l,
-                new Address(10001l, "Nairobi", "Kenya", "Banda st", "2323",
-                        LocalDateTime.now(),
-                        LocalDateTime.now())
+                new AddressDto(
+                        10001l,
+                        "Nairobi",
+                        "Kenya",
+                        "Banda st",
+                        "2323")
         );
 
         // then
@@ -88,9 +94,15 @@ public class AddressServiceImplIntegrationTest {
     void testUpdateAddressDetails_returnNotFoundException() {
         // given
         Long id = 23l;
+        AddressDto addressDto = new AddressDto(
+                10001l,
+                "Nai",
+                "Kenya",
+                "Kaunda St",
+                "2323" );
 
         // when
-        Throwable throwable = catchThrowable(() -> addressServiceImpl.updateAddressDetails(id, address));
+        Throwable throwable = catchThrowable(() -> addressServiceImpl.updateAddressDetails(id, addressDto));
 
         // then
         BDDAssertions.then(throwable).isInstanceOf(AddressNotFoundException.class);
@@ -99,9 +111,13 @@ public class AddressServiceImplIntegrationTest {
     @Test
     void testCreateAddress_returnNewAddress() {
         // given
-
+        CreateAddressRequest createAddressRequest = new CreateAddressRequest(
+                "Nai",
+                "Kenya",
+                "Kaunda St",
+                "2323" );
         // when
-        Address savedAddress = addressServiceImpl.createAddress(address);
+        Address savedAddress = addressServiceImpl.createAddress(createAddressRequest);
 
         // then
         then(savedAddress.getId()).isNotNull();

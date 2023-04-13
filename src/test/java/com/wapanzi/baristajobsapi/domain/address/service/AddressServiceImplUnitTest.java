@@ -1,5 +1,7 @@
 package com.wapanzi.baristajobsapi.domain.address.service;
 
+import com.wapanzi.baristajobsapi.domain.address.dto.AddressDto;
+import com.wapanzi.baristajobsapi.domain.address.dto.CreateAddressRequest;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.repository.AddressRepository;
 import org.junit.jupiter.api.Test;
@@ -45,7 +47,7 @@ public class AddressServiceImplUnitTest {
         given(addressRepository.save(any(Address.class))).willReturn(newAddress);
 
         // when
-        Address savedAddress = addressServiceImpl.createAddress(newAddress);
+        Address savedAddress = addressServiceImpl.createAddress(new CreateAddressRequest("Kanairo", "Kenya", "Banda st", "2323"));
 
         // then
         then(savedAddress.getId()).isNotNull();

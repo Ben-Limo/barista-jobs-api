@@ -1,5 +1,7 @@
 package com.wapanzi.baristajobsapi.domain.company.controller;
 
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyTypeDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CreateCompanyTypeRequest;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyTypeService;
 import jakarta.validation.Valid;
@@ -15,19 +17,22 @@ public class CompanyTypeController {
     @Autowired
     private final CompanyTypeService service;
     @GetMapping("/company-type/{id}")
-    public CompanyType getCompanyType(@PathVariable("id") Long id) {
+    public CompanyTypeDto getCompanyType(@PathVariable("id") Long id) {
         return service.findCompanyTypeById(id);
     }
 
     @PostMapping("/company-type")
-    public CompanyType createNewCompanyType(@Valid @RequestBody CompanyType companyType) {
-        return service.createNewCompanyType(companyType);
+    public ResponseEntity<String> createNewCompanyType(
+            @Valid @RequestBody CreateCompanyTypeRequest request) {
+        service.createNewCompanyType(request);
+        return new ResponseEntity<>("Company Type created successfully", HttpStatus.CREATED);
     }
 
     @PostMapping("/company-type/{id}")
-    public CompanyType createNewCompanyType(@PathVariable("id") Long id,
-                                            @Valid @RequestBody CompanyType companyType) {
-        return service.updateCompanyType(id, companyType);
+    public ResponseEntity<String> updateCompanyType(@PathVariable("id") Long id,
+                                            @Valid @RequestBody CompanyTypeDto companyTypeDto) {
+        service.updateCompanyType(id, companyTypeDto);
+        return new ResponseEntity<>("Company Type created successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/company-type/{id}")

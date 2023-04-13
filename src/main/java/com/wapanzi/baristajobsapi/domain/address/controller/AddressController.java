@@ -1,5 +1,7 @@
 package com.wapanzi.baristajobsapi.domain.address.controller;
 
+import com.wapanzi.baristajobsapi.domain.address.dto.AddressDto;
+import com.wapanzi.baristajobsapi.domain.address.dto.CreateAddressRequest;
 import com.wapanzi.baristajobsapi.domain.address.model.Address;
 import com.wapanzi.baristajobsapi.domain.address.service.AddressServiceImpl;
 import jakarta.validation.Valid;
@@ -15,19 +17,24 @@ public class AddressController {
     @Autowired
     private final AddressServiceImpl addressServiceImpl;
     @GetMapping("/addresses/{id}")
-    public Address getAddress(@PathVariable Long id) {
+    public AddressDto getAddress(@PathVariable Long id) {
         return addressServiceImpl.getAddressById(id);
     }
 
     @PostMapping("/addresses/{id}")
-    public Address updateAddress(@PathVariable Long id,
-                                 @Valid @RequestBody Address address) {
-        return addressServiceImpl.updateAddressDetails(id, address);
+    public ResponseEntity<String> updateAddress(@PathVariable Long id,
+                                 @Valid @RequestBody AddressDto updateAddressRequest) {
+
+        addressServiceImpl.updateAddressDetails(id, updateAddressRequest);
+
+        return new ResponseEntity<>("Address updated successfully", HttpStatus.OK);
     }
 
     @PostMapping("/addresses")
-    public Address createAddress(@Valid @RequestBody Address address) {
-        return addressServiceImpl.createAddress(address);
+    public ResponseEntity<String> createAddress(@Valid @RequestBody CreateAddressRequest request) {
+        addressServiceImpl.createAddress(request);
+
+        return new ResponseEntity<>("Address created successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/addresses/{addressId}")

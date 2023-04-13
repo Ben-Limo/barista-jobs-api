@@ -1,6 +1,8 @@
 package com.wapanzi.baristajobsapi.domain.company.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyTypeDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CreateCompanyTypeRequest;
 import com.wapanzi.baristajobsapi.domain.company.exception.CompanyTypeNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.service.CompanyTypeService;
@@ -33,17 +35,22 @@ class CompanyTypeControllerIntegrationTest {
     @MockBean
     private CompanyTypeService service;
 
+    private CompanyTypeDto companyTypeDto;
+    private CreateCompanyTypeRequest companyTypeRequest;
+
     private CompanyType companyType;
 
     @BeforeEach
     void setup() {
         companyType = new CompanyType(1L, "Brewery", LocalDateTime.now(), LocalDateTime.now());
+        companyTypeDto = new CompanyTypeDto(1l,"Brewery");
+        companyTypeRequest = new CreateCompanyTypeRequest("Coffee House");
     }
     @Test
     void testGetCompanyType_returnCompanyType() throws Exception {
         // given
         Long id = 1L;
-        given(service.findCompanyTypeById(anyLong())).willReturn(companyType);
+        given(service.findCompanyTypeById(anyLong())).willReturn(companyTypeDto);
 
         // when
         ResultActions response = mockMvc.perform(get("/company-type/{id}", id));
@@ -72,24 +79,22 @@ class CompanyTypeControllerIntegrationTest {
     @Test
     void testCreateNewCompanyType_whenSuccessful_returnCreatedCompanyType() throws Exception{
         // given
-        given(service.createNewCompanyType(any(CompanyType.class))).willReturn(companyType);
+        given(service.createNewCompanyType(any(CreateCompanyTypeRequest.class))).willReturn(companyType);
 
         // when
         ResultActions response = mockMvc.perform(post("/company-type")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(companyType)));
+                .content(objectMapper.writeValueAsString(companyTypeRequest)));
 
         // then
         response
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(1L))
-                .andExpect(jsonPath("name").value("Brewery"));
+                .andExpect(status().isCreated());
     }
 
     @Test
     void testUpdateCompanyType_whenSuccessful_returnUpdatedCompanyType() throws Exception {
         // given
-        given(service.updateCompanyType(anyLong(), any(CompanyType.class))).willReturn(companyType);
+        given(service.updateCompanyType(anyLong(), any(CompanyTypeDto.class))).willReturn(companyType);
 
         // when
         ResultActions response = mockMvc.perform(
@@ -99,15 +104,13 @@ class CompanyTypeControllerIntegrationTest {
 
         // then
         response
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(1L))
-                .andExpect(jsonPath("name").value("Brewery"));
+                .andExpect(status().isOk());
     }
 
     @Test
     void testUpdateCompanyType_whenMissing_returnNotFound() throws Exception {
         // given
-        given(service.updateCompanyType(anyLong(), any(CompanyType.class))).willThrow(CompanyTypeNotFoundException.class);
+        given(service.updateCompanyType(anyLong(), any(CompanyTypeDto.class))).willThrow(CompanyTypeNotFoundException.class);
 
         // when
         ResultActions response = mockMvc.perform(

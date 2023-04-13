@@ -1,5 +1,7 @@
 package com.wapanzi.baristajobsapi.domain.company.service;
 
+import com.wapanzi.baristajobsapi.domain.company.dto.CompanyTypeDto;
+import com.wapanzi.baristajobsapi.domain.company.dto.CreateCompanyTypeRequest;
 import com.wapanzi.baristajobsapi.domain.company.exception.CompanyTypeNotFoundException;
 import com.wapanzi.baristajobsapi.domain.company.model.CompanyType;
 import com.wapanzi.baristajobsapi.domain.company.repository.CompanyTypeRepository;
@@ -29,10 +31,13 @@ public class CompanyTypeServiceImplUnitTest {
     @MockBean
     private CompanyTypeRepository repository;
     private CompanyType companyType;
-
+    private CreateCompanyTypeRequest companyTypeRequest;
+    private CompanyTypeDto companyTypeDto;
     @BeforeEach
     public void setup() {
         companyType = new CompanyType(1l, "Barista", LocalDateTime.now(), LocalDateTime.now());
+        companyTypeDto = new CompanyTypeDto(1l,"Brewery");
+        companyTypeRequest = new CreateCompanyTypeRequest("Barista");
     }
     @Test
     void testCreateCompanyType_returnCreatedCompanyType() {
@@ -42,9 +47,7 @@ public class CompanyTypeServiceImplUnitTest {
         );
 
         // when
-        CompanyType savedCompanyType = service.createNewCompanyType(
-                new CompanyType(3l, "Bar", LocalDateTime.now(), LocalDateTime.now())
-        );
+        CompanyType savedCompanyType = service.createNewCompanyType(companyTypeRequest);
 
         // then
         then(savedCompanyType.getId()).isNotNull();
@@ -59,12 +62,12 @@ public class CompanyTypeServiceImplUnitTest {
         given(repository.findById(anyLong())).willReturn(Optional.of(companyType));
 
         // when
-        CompanyType foundCompanyType = service.findCompanyTypeById(id);
+        CompanyTypeDto foundCompanyType = service.findCompanyTypeById(id);
 
         // then
-        then(foundCompanyType.getId()).isNotNull();
-        then(foundCompanyType.getId()).isEqualTo(1l);
-        then(foundCompanyType.getName()).isEqualTo("Barista");
+        then(foundCompanyType.id()).isNotNull();
+        then(foundCompanyType.id()).isEqualTo(1l);
+        then(foundCompanyType.name()).isEqualTo("Barista");
     }
 
     @Test
@@ -87,7 +90,7 @@ public class CompanyTypeServiceImplUnitTest {
         given(repository.findById(anyLong())).willReturn(Optional.of(companyType));
         given(repository.save(any(CompanyType.class))).willReturn(newUpdate);
        // when
-        CompanyType updatedCompanyType = service.updateCompanyType(id, newUpdate);
+        CompanyType updatedCompanyType = service.updateCompanyType(id, companyTypeDto);
 
         // then
         then(updatedCompanyType.getId()).isNotNull();
